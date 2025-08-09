@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Modern clothing shop with responsive product grid, filters, and cart." />
+  <title>THREAD & CO · Clothing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c0f;
+      --card: #11131a;
+      --muted: #9aa3b2;
+      --text: #e6eaf2;
+      --accent: #8b5cf6;
+      --accent-2: #22d3ee;
+      --ring: 0 0 0 .12rem #8b5cf680;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg:#f8fafc; --card:#ffffff; --muted:#5b6472; --text:#0f172a; --shadow:0 10px 25px rgba(2,6,23,.08); }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 80% -10%, rgba(139,92,246,.15), transparent 55%),
+                  radial-gradient(900px 700px at -10% 0%, rgba(34,211,238,.18), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin: 0 auto; }
+    .glass { background: color-mix(in oklab, var(--card) 88%, transparent); border: 1px solid rgba(255,255,255,.06); box-shadow: var(--shadow); border-radius: var(--radius); }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: .8rem 1rem; margin-top: .6rem; }
+    .brand { display:flex; gap:.7rem; align-items:center; font-weight:700; letter-spacing:.4px; }
+    .logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: inset 0 0 0 2px rgba(255,255,255,.18); }
+    .nav-actions { display:flex; gap:.6rem; align-items:center; }
+    .btn { display:inline-flex; align-items:center; gap:.5rem; padding:.7rem 1rem; border-radius: 12px; border:1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color: var(--text); cursor:pointer; transition: transform .12s ease, box-shadow .12s ease, border-color .2s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0,0,0,.18); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: 0; color: #0b0c0f; font-weight: 700; }
+    .badge { display:inline-grid; place-items:center; min-width: 22px; height: 22px; padding:0 6px; background:#0b0c0f; color: #fff; border-radius: 999px; font-size: 12px; border:1px solid rgba(255,255,255,.12); }
+
+    /* Hero */
+    .hero { display:grid; grid-template-columns: 1.1fr .9fr; gap: 2rem; align-items:center; padding: 2.2rem 1rem 1.8rem; }
+    .hero h1 { font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.05; margin: 0 0 .6rem; letter-spacing:-.5px; }
+    .hero p { font-size: clamp(1rem, 1.5vw, 1.15rem); color: var(--muted); margin: 0 0 1.2rem; }
+    .hero .cta { display:flex; gap:.7rem; flex-wrap:wrap; }
+    .hero-card { aspect-ratio: 4/3; border-radius: calc(var(--radius) + 4px); overflow: hidden; position: relative; isolation:isolate; }
+    .hero-card img { width: 100%; height: 100%; object-fit: cover; display:block; filter: contrast(1.05) saturate(1.05); }
+    .hero-tag { position:absolute; left: 12px; bottom: 12px; padding:.5rem .7rem; background: rgba(0,0,0,.45); color:#fff; border-radius: 999px; font-weight:600; border:1px solid rgba(255,255,255,.18); backdrop-filter: blur(6px); }
+
+    /* Filters */
+    .toolbar { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:space-between; padding: 1rem; margin-top: .4rem; }
+    .chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+    .chip { padding:.5rem .8rem; border-radius: 999px; background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); cursor:pointer; font-weight:600; }
+    .chip[aria-pressed="true"] { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0c0f; border:0; }
+    .search { position: relative; }
+    .search input { width: 260px; max-width: 62vw; padding:.75rem 2.4rem .75rem .9rem; border-radius: 12px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color: var(--text); }
+    .search svg { position:absolute; right:.6rem; top:50%; transform:translateY(-50%); opacity:.7 }
+
+    /* Grid */
+    .grid { display:grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; padding: 0 1rem 2rem; }
+    .card { grid-column: span 3; min-width: 220px; overflow:hidden; position:relative; border-radius: var(--radius); }
+    .card .img { position:relative; overflow:hidden; aspect-ratio: 4/5; }
+    .card img { width: 100%; height: 100%; object-fit: cover; display:block; transition: transform .5s ease; }
+    .card:hover img { transform: scale(1.06); }
+    .card .fav { position:absolute; right:10px; top:10px; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.2); backdrop-filter: blur(4px); border-radius: 999px; width:36px; height:36px; display:grid; place-items:center; }
+    .card .body { padding: .9rem; display:grid; gap:.35rem; }
+    .title { font-weight:700; letter-spacing:.2px; }
+    .muted { color: var(--muted); font-size:.95rem; }
+    .price { display:flex; align-items:baseline; gap:.4rem; }
+    .price .now { font-weight:800; }
+    .price .was { text-decoration: line-through; opacity:.6; }
+    .size-sel { display:flex; gap:.4rem; flex-wrap:wrap; margin: .2rem 0 .6rem; }
+    .size-sel button { padding:.45rem .65rem; border-radius:10px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); cursor:pointer; }
+    .add { width:100%; justify-content:center; }
+
+    @media (max-width: 1024px) { .card { grid-column: span 4; } .hero { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) { .card { grid-column: span 6; } .search input { width: 100%; } }
+
+    /* Footer */
+    footer { padding: 2rem 1rem 4rem; color: var(--muted); font-size:.95rem; }
+    .cols { display:grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+    .cols h4 { color: var(--text); margin:.2rem 0 .6rem; }
+    @media (max-width: 900px) { .cols { grid-template-columns: 1fr 1fr; } }
+
+    /* Dialog (Cart) */
+    dialog { border: 0; border-radius: calc(var(--radius) + 4px); background: var(--card); color: var(--text); width: min(720px, 96vw); box-shadow: 0 30px 90px rgba(0,0,0,.55); }
+    dialog::backdrop { backdrop-filter: blur(6px) saturate(1.2); background: rgba(0,0,0,.45); }
+    .cart-head { display:flex; align-items:center; justify-content:space-between; padding: 1rem 1.2rem; border-bottom:1px solid rgba(255,255,255,.06); }
+    .cart-body { padding: 1rem 1.2rem; max-height: 60vh; overflow: auto; }
+    .cart-item { display:grid; grid-template-columns: 72px 1fr auto; gap: .8rem; align-items:center; padding:.6rem; border-radius: 12px; }
+    .cart-item img { width:72px; height:72px; object-fit:cover; border-radius:10px; }
+    .cart-foot { display:flex; align-items:center; justify-content:space-between; padding: 1rem 1.2rem; border-top:1px solid rgba(255,255,255,.06); }
+    .empty { color: var(--muted); text-align:center; padding: 1.2rem; }
+  </style>
+</head>
+<body>
+  <header class="glass">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Go to home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>THREAD & CO</span>
+      </a>
+      <nav aria-label="Primary">
+        <div class="nav-actions">
+          <button class="btn" id="btn-men" data-filter="Men">Men</button>
+          <button class="btn" id="btn-women" data-filter="Women">Women</button>
+          <button class="btn" id="btn-new" data-filter="New">New</button>
+          <button class="btn" id="btn-sale" data-filter="Sale">Sale</button>
+          <button class="btn" id="openCart" aria-haspopup="dialog" aria-controls="cartDialog" aria-expanded="false">🛒 <span class="badge" id="cartCount">0</span></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div>
+        <h1>Everyday essentials, <span style="background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent">beautifully made</span>.</h1>
+        <p>Premium basics and statement pieces designed for comfort and durability. Ethically produced, shipped in recycled packaging.</p>
+        <div class="cta">
+          <a href="#catalog" class="btn primary">Shop the collection</a>
+          <button class="btn" id="toSale">View seasonal deals</button>
+        </div>
+      </div>
+      <div class="hero-card glass">
+        <img src="https://picsum.photos/seed/hero/1600/1200" alt="Models wearing minimalist outfits" loading="eager" onerror="this.src='https://picsum.photos/seed/hero2/1600/1200'"/>
+        <span class="hero-tag">New drop: Linen Capsule</span>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <div class="toolbar glass" id="catalog">
+      <div class="chips" role="toolbar" aria-label="Filter by category">
+        <button class="chip" aria-pressed="true" data-filter="All">All</button>
+        <button class="chip" data-filter="Men">Men</button>
+        <button class="chip" data-filter="Women">Women</button>
+        <button class="chip" data-filter="New">New</button>
+        <button class="chip" data-filter="Sale">Sale</button>
+      </div>
+      <div class="search">
+        <label class="sr-only" for="q">Search products</label>
+        <input id="q" type="search" placeholder="Search tees, denim, jackets…" aria-label="Search products" />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5"/><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <section class="grid" id="grid" aria-live="polite"></section>
+
+    <!-- Footer -->
+    <footer class="container">
+      <div class="cols">
+        <div>
+          <h4>About</h4>
+          <p>We make timeless clothing with a focus on quality, comfort, and sustainability.</p>
+        </div>
+        <div>
+          <h4>Help</h4>
+          <p>Shipping & returns · Size guide · FAQ</p>
+        </div>
+        <div>
+          <h4>Newsletter</h4>
+          <p>Join for early access and 10% off.</p>
+          <form id="nl" class="glass" style="padding:.4rem; display:flex; gap:.4rem;">
+            <input type="email" placeholder="Email address" aria-label="Email address" required style="flex:1; background:transparent; border:0; color:var(--text); padding:.6rem .8rem;" />
+            <button class="btn primary" type="submit">Subscribe</button>
+          </form>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>hello@threadandco.example<br/>Mon–Fri 9–5</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Cart Dialog -->
+  <dialog id="cartDialog" aria-label="Shopping cart">
+    <div class="cart-head">
+      <strong>Shopping Cart</strong>
+      <form method="dialog">
+        <button class="btn">Close</button>
+      </form>
+    </div>
+    <div class="cart-body" id="cartList"></div>
+    <div class="cart-foot">
+      <strong>Total: <span id="cartTotal">$0.00</span></strong>
+      <button class="btn primary" id="checkout">Checkout</button>
+    </div>
+  </dialog>
+
+  <script>
+    // --- Data (replace with CMS/API later) ---
+    const products = [
+      { id:1, title:"Heavyweight Tee", cat:"Men", price:28, was:34, new:false, sale:true, sizes:["S","M","L","XL"], img:"https://picsum.photos/seed/p1/1600/2000" },
+      { id:2, title:"Relaxed Linen Shirt", cat:"Men", price:54, was:null, new:true, sale:false, sizes:["S","M","L"], img:"https://picsum.photos/seed/p2/1600/2000" },
+      { id:3, title:"High-Waist Wide Jeans", cat:"Women", price:72, was:89, new:false, sale:true, sizes:["24","26","28","30"], img:"https://picsum.photos/seed/p3/1600/2000" },
+      { id:4, title:"Boxy Cropped Tee", cat:"Women", price:24, was:null, new:true, sale:false, sizes:["XS","S","M","L"], img:"https://picsum.photos/seed/p4/1600/2000" },
+      { id:5, title:"Everyday Hoodie", cat:"Men", price:65, was:null, new:false, sale:false, sizes:["S","M","L","XL"], img:"https://picsum.photos/seed/p5/1600/2000" },
+      { id:6, title:"Minimalist Trench", cat:"Women", price:120, was:149, new:false, sale:true, sizes:["XS","S","M"], img:"https://picsum.photos/seed/p6/1600/2000" },
+      { id:7, title:"Athletic Joggers", cat:"Men", price:49, was:null, new:true, sale:false, sizes:["S","M","L","XL"], img:"https://picsum.photos/seed/p7/1600/2000" },
+      { id:8, title:"Ribbed Tank", cat:"Women", price:18, was:null, new:false, sale:false, sizes:["XS","S","M","L"], img:"https://picsum.photos/seed/p8/1600/2000" }
+    ];
+
+    const state = { filter: 'All', search: '', cart: [] };
+
+    // --- Helpers ---
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    function money(n){ return n.toLocaleString(undefined,{style:'currency',currency:'USD'}); }
+
+    function renderGrid(){
+      const q = state.search.toLowerCase();
+      let list = products.filter(p =>
+        (state.filter==='All' || p.cat===state.filter || (state.filter==='New' && p.new) || (state.filter==='Sale' && p.sale)) &&
+        (p.title.toLowerCase().includes(q))
+      );
+      const grid = $('#grid');
+      grid.innerHTML = list.map(p => cardHTML(p)).join('');
+    }
+
+    function cardHTML(p){
+      return `
+        <article class="card glass" data-id="${p.id}" data-cat="${p.cat}" data-new="${p.new}" data-sale="${p.sale}">
+          <div class="img">
+            <img src="${p.img}" alt="${p.title}" loading="lazy" onerror="this.src='https://picsum.photos/seed/fallback${p.id}/800/1000'"/>
+            <button class="fav" aria-label="Add to wishlist">❤</button>
+          </div>
+          <div class="body">
+            <div class="title">${p.title}</div>
+            <div class="muted">${p.cat}${p.new ? ' · New' : ''}${p.sale ? ' · Sale' : ''}</div>
+            <div class="price">
+              <span class="now">${money(p.price)}</span>
+              ${p.was ? `<span class="was">${money(p.was)}</span>` : ''}
+            </div>
+            <div class="size-sel" role="group" aria-label="Choose size">
+              ${p.sizes.map(s => `<button data-size="${s}">${s}</button>`).join('')}
+            </div>
+            <button class="btn add" data-add="${p.id}">Add to cart</button>
+          </div>
+        </article>`;
+    }
+
+    function setFilter(val){
+      state.filter = val; $$(".chip").forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.filter===val)));
+      renderGrid();
+    }
+
+    // --- Cart ---
+    function addToCart(id, size){
+      const item = products.find(p=>p.id===id);
+      if(!item) return;
+      const key = id+"-"+(size||'');
+      const existing = state.cart.find(ci => ci.key===key);
+      if(existing) existing.qty++; else state.cart.push({ key, id, size, qty:1 });
+      updateCartUI();
+    }
+
+    function updateCartUI(){
+      const list = $('#cartList');
+      if(state.cart.length===0){ list.innerHTML = `<p class="empty">Your cart is empty.</p>`; }
+      else {
+        list.innerHTML = state.cart.map(ci => {
+          const p = products.find(x=>x.id===ci.id);
+          return `<div class="cart-item glass">
+              <img src="${p.img}" alt="${p.title}">
+              <div>
+                <strong>${p.title}</strong><div class="muted">${ci.size ? 'Size '+ci.size+' · ' : ''}${p.cat}</div>
+                <div>${money(p.price)} × ${ci.qty}</div>
+              </div>
+              <div style="display:grid; gap:.4rem; justify-items:end;">
+                <button class="btn" data-dec="${ci.key}">–</button>
+                <button class="btn" data-rem="${ci.key}">Remove</button>
+              </div>
+            </div>`;
+        }).join('');
+      }
+      $('#cartCount').textContent = state.cart.reduce((a,b)=>a+b.qty,0);
+      const total = state.cart.reduce((sum,ci)=> sum + (products.find(p=>p.id===ci.id).price * ci.qty), 0);
+      $('#cartTotal').textContent = money(total);
+    }
+
+    // --- Events ---
+    document.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if(chip){ setFilter(chip.dataset.filter); }
+
+      const add = e.target.closest('[data-add]');
+      if(add){
+        const id = Number(add.dataset.add);
+        const card = add.closest('.card');
+        const chosen = card.querySelector('.size-sel button[aria-pressed="true"]');
+        const size = chosen ? chosen.dataset.size : undefined;
+        addToCart(id, size);
+        $('#openCart').click();
+      }
+
+      const sizeBtn = e.target.closest('.size-sel button');
+      if(sizeBtn){
+        const wrap = sizeBtn.parentElement; wrap.querySelectorAll('button').forEach(b => b.removeAttribute('aria-pressed'));
+        sizeBtn.setAttribute('aria-pressed','true');
+      }
+
+      if(e.target.id==='toSale'){ setFilter('Sale'); document.getElementById('catalog').scrollIntoView({behavior:'smooth'}); }
+
+      const dec = e.target.closest('[data-dec]');
+      if(dec){ const key = dec.dataset.dec; const i = state.cart.find(ci=>ci.key===key); if(i){ i.qty=Math.max(0, i.qty-1); if(i.qty===0) state.cart = state.cart.filter(x=>x.key!==key); updateCartUI(); } }
+
+      const rem = e.target.closest('[data-rem]');
+      if(rem){ const key = rem.dataset.rem; state.cart = state.cart.filter(x=>x.key!==key); updateCartUI(); }
+    });
+
+    $('#q').addEventListener('input', (e)=>{ state.search = e.target.value; renderGrid(); });
+
+    const dialog = document.getElementById('cartDialog');
+    document.getElementById('openCart').addEventListener('click', ()=>{ dialog.showModal(); updateCartUI(); });
+    document.getElementById('checkout').addEventListener('click', ()=>{
+      alert('This is a demo checkout. Hook up your payment provider here.');
+    });
+
+    // init
+    renderGrid();
+  </script>
+</body>
+</html>

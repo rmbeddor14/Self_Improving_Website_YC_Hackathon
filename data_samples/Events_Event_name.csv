@@ -1,0 +1,15 @@
+# ----------------------------------------
+# Events: Event name
+# Account: rachelbeddor
+# Property: TechGrandkids
+# ----------------------------------------
+# 
+# All Users
+# Start date: 20250712
+# End date: 20250808
+Event name,Event count,Total users,Event count per active user,Total revenue
+first_visit,11,11,1,0
+page_view,11,11,1,0
+session_start,11,11,1,0
+scroll,3,3,1,0
+user_engagement,3,3,1,0
