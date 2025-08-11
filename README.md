@@ -27,10 +27,10 @@ Currently, improving a site means manually analyzing this data and then making c
 We wanted to skip all that manual analysis and decision-making by **automating the process with an agent**.  
 
 Our agent automatically:  
-1. Analyzes website data from **Google Analytics** 📊  
-2. Decides on the best improvements 💡  
-3. Edits the site’s code 🛠️  
-4. Pushes the update **live to the web** 🚀  
+1. Analyzes website data from **Google Analytics** 
+2. Decides on the best improvements 
+3. Edits the site’s code 
+4. Pushes the update **live to the web** 
 
 
 
@@ -61,8 +61,15 @@ Our agent automatically:
 6. **Same.new Integration**  
    - Can send website code directly to the GitHub repository.
 
+## Demo 
 
-# How to Run This Code 
+I quickly recorded this demo 5 mins before the submission deadline, so it's not very polished - but that's the hackathon experience! 
+
+
+[![Demo Video](img/demo.png)](https://youtu.be/v4Ga1RBEvls?si=X5J7p54YAXDPHyEc)
+
+
+# How to Run This Code Yourself 
 
 Analyze a CSV of engagement metrics and **auto‑enhance HTML**. Run locally as a **Streamlit** app or call the core class directly.
 
