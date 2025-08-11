@@ -1,4 +1,68 @@
-# HTML Engagement Enhancer
+# Self Improving Website - YC Hackathon 08.09.2025
+
+## Hackathon
+
+This was a **half-day hackathon** focused on building **AI-powered coding tools and agents**. It was hosted at **YC headquarters in SF**. 
+
+ 
+![](img/hackathon_all.gif)
+
+## Group 
+
+From strangers to friends!! 👯 
+
+Laura Chirila (github: @ChirilaLaura), Ben Eadie (github: @beneadie), and I met on the day of the hackathon, and it turned out to be a **fantastic group**!  
+
+Laura brought the idea of **a self-improving website**. 
+
+![](img/group_pic.png)
+
+
+## Project Problem 
+
+Website owners already have access to tons of analytics data about their site. Tools like Google Analytics allow them to see metrics like how many people clicked a button (**click-through rate**) and how long users spent on the site (**average session duration**). 
+
+Currently, improving a site means manually analyzing this data and then making code edits to the webpage source code. 
+
+We wanted to skip all that manual analysis and decision-making by **automating the process with an agent**.  
+
+Our agent automatically:  
+1. Analyzes website data from **Google Analytics** 📊  
+2. Decides on the best improvements 💡  
+3. Edits the site’s code 🛠️  
+4. Pushes the update **live to the web** 🚀  
+
+
+
+## Architecture
+
+- We designed the following architecture for our project: 
+
+![](img/Architecture1.png)
+
+
+1. **Google Analytics Data**  
+   - Exported as CSV from the site.  
+
+2. **Generate Code Change Suggestions** (Claude)  
+   - Uses analytics data and website code.  
+   - Generates **code change suggestions** at set intervals.  
+
+3. **Apply Code Changes** (Morph)  
+   - Applies changes to the site code.  
+
+4. **Version Control & Deployment**  
+   - Automatically pushes updates to **GitHub**.  
+   - Automatically deploys via **Netlify**.  
+
+5. **Customer Dashboard**  
+   - Set intervals, run A/B tests, roll back changes, or stop updates.  
+
+6. **Same.new Integration**  
+   - Can send website code directly to the GitHub repository.
+
+
+# How to Run This Code 
 
 Analyze a CSV of engagement metrics and **auto‑enhance HTML**. Run locally as a **Streamlit** app or call the core class directly.
 
@@ -57,3 +121,9 @@ Path("page.enhanced.html").write_text(enhanced)
 ANTHROPIC_API_KEY=sk-ant-...
 MORPH_API_KEY=sk-morph-...
 ```
+
+
+# Also check out the code we built with Same.New
+
+- we explored a frontend with Same.New that I didn't include here - https://github.com/beneadie/seo-agent-dashboard
+
