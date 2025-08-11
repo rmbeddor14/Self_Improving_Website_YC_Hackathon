@@ -32,7 +32,12 @@ Our agent automatically:
 3. Edits the site’s code 
 4. Pushes the update **live to the web** 
 
+## Demo 
 
+I quickly recorded this demo 5 mins before the submission deadline, so it's not very polished - but that's the hackathon experience! 
+
+
+[![Demo Video](img/demo.png)](https://youtu.be/v4Ga1RBEvls?si=X5J7p54YAXDPHyEc)
 
 ## Architecture
 
@@ -60,13 +65,6 @@ Our agent automatically:
 
 6. **Same.new Integration**  
    - Can send website code directly to the GitHub repository.
-
-## Demo 
-
-I quickly recorded this demo 5 mins before the submission deadline, so it's not very polished - but that's the hackathon experience! 
-
-
-[![Demo Video](img/demo.png)](https://youtu.be/v4Ga1RBEvls?si=X5J7p54YAXDPHyEc)
 
 
 # How to Run This Code Yourself 
